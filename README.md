@@ -11,9 +11,13 @@ Veyra is a modern programming language designed for web development and rapid pr
 - 🚀 **Fast Development**: Simple syntax with powerful built-ins
 - 🌐 **Web-Native**: Built-in HTML, CSS, and web server functionality
 - 📦 **Package Management**: Easy dependency management with `veyra-pm`
-- 🎯 **AI-Ready**: Integrated machine learning functions
+- 🎯 **AI-Ready**: Integrated machine learning functions (matrix operations, neural network primitives)
 - 🔧 **Extensible**: Easy to add new features and libraries
-- 📚 **Rich Standard Library**: Math, string manipulation, and utility functions
+- 📚 **Rich Standard Library**: Math, string manipulation, file I/O, JSON, and utility functions
+- 🏗️ **Object-Oriented**: Full class support with inheritance, methods, and instances
+- 🛡️ **Error Handling**: Try/catch blocks for robust error management
+- 🔄 **Concurrency**: Channel-based communication
+- 🖥️ **Interactive REPL**: Multi-line input support for rapid prototyping
 
 ## 📦 Installation
 
