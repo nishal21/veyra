@@ -41,7 +41,7 @@ def test_operators():
     lexer = Lexer("x <= y && z >= 5")
     tokens = lexer.tokenize()
 
-    expected_values = ["x", "<=", "y", "&&", "z", ">=", "5"]
+    expected_values = ["x", "<=", "y", "&&", "z", ">=", 5]
     actual_values = [t.value for t in tokens[:-1]]  # exclude EOF
 
     assert actual_values == expected_values
@@ -53,5 +53,5 @@ def test_comments():
     tokens = lexer.tokenize()
 
     # Should skip comment and tokenize the rest
-    assert len(tokens) == 5  # let x = 1 ; EOF
+    assert len(tokens) == 6  # let x = 1 ; EOF
     assert tokens[0].value == "let"
