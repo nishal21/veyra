@@ -2,15 +2,9 @@
 fn main() {
     println("Launching Veyra App with Stunning UX...");
 
-    let layout = ui_layout("row", [
-        ui_accessible("button", "Login"),
-        ui_accessible("button", "Sign Up")
-    ]);
+    let layout = ui_layout("row", ["Button1", "Button2"]);
 
-    let form = ui_form([
-        {"type": "text", "placeholder": "Username"},
-        {"type": "password", "placeholder": "Password"}
-    ]);
+    let form = ui_form("text", "Enter username");
 
     let anim_css = ui_animation(".button", "fadeIn");
 
@@ -18,8 +12,10 @@ fn main() {
     println("Form: " + form);
     println("Animation CSS: " + anim_css);
 
-    ui_button("Submit Form", "Form submitted successfully!");
-    ui_button("Animate", "Animation applied!");
+    let button1 = ui_button("Submit Form", "Form submitted successfully!");
+    let button2 = ui_button("Animate", "Animation applied!");
+    println("Button 1: " + button1);
+    println("Button 2: " + button2);
 
     println("App UX is flawless and stunning!");
 }

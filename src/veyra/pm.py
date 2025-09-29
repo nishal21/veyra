@@ -6,7 +6,7 @@ Simple package manager for Veyra libraries
 
 import os
 import sys
-import urllib2
+import urllib.request
 import json
 import shutil
 
@@ -35,7 +35,7 @@ class VeyraPM:
     def _download_package(self, url, filename):
         """Download a package file"""
         try:
-            response = urllib2.urlopen(url)
+            response = urllib.request.urlopen(url)
             content = response.read()
             with open(os.path.join(self.lib_dir, filename), 'w') as f:
                 f.write(content)

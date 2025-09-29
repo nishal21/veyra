@@ -1,4 +1,4 @@
-from parser import Program, Function, Block, LetStatement, AssignmentStatement, FunctionCallStatement, IfStatement, WhileStatement, ForStatement, ReturnStatement, PrintStatement, ImportStatement, BinaryOp, UnaryOp, Number, Float, Boolean, String, Variable, FunctionCall, Array, Index, Dict
+from .parser import Program, Function, Block, LetStatement, AssignmentStatement, FunctionCallStatement, IfStatement, WhileStatement, ForStatement, ReturnStatement, PrintStatement, ImportStatement, BinaryOp, UnaryOp, Number, Float, Boolean, String, Variable, FunctionCall, Array, Index, Dict, MatchExpression, Case
 
 class Interpreter:
     def __init__(self):
@@ -35,11 +35,11 @@ class Interpreter:
             else:
                 return None  # blocking, but for now return None
         elif name == 'http_get':
-            import urllib2
+            import urllib.request
             url = args[0]
             try:
-                response = urllib2.urlopen(url)
-                return response.read()
+                response = urllib.request.urlopen(url)
+                return response.read().decode('utf-8')
             except:
                 return "Error fetching URL"
         elif name == 'web_serve':
@@ -48,17 +48,16 @@ class Interpreter:
             print("Starting Veyra web server on port {}...".format(port))
             print("Visit http://localhost:{} in your browser".format(port))
             # Simple HTTP server
-            import BaseHTTPServer
-            import SimpleHTTPServer
-            class Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+            import http.server
+            import socketserver
+            class Handler(http.server.SimpleHTTPRequestHandler):
                 def do_GET(self):
                     self.send_response(200)
                     self.send_header('Content-type', 'text/html')
                     self.end_headers()
-                    self.wfile.write(html_content)
-            server = BaseHTTPServer.HTTPServer(('localhost', port), Handler)
-            server.serve_forever()
-            return "Server running"
+                    self.wfile.write(html_content.encode('utf-8'))
+            with socketserver.TCPServer(("", port), Handler) as httpd:
+                httpd.serve_forever()
             return "Saved"
         elif name == 'html_element':
             tag, content = args[0], args[1] if len(args) > 1 else ""
@@ -148,6 +147,9 @@ class Interpreter:
         elif name == 'replace':
             string, old, new = args
             return string.replace(old, new)
+        elif name == 'rand':
+            import random
+            return random.random()
         else:
             func = self.functions[name]
         if len(args) != len(func.params):
@@ -280,6 +282,16 @@ class Interpreter:
             return elements  # Return as list
         elif isinstance(expr, Dict):
             return {self.evaluate_expression(k, env): self.evaluate_expression(v, env) for k, v in expr.items}
+        elif isinstance(expr, MatchExpression):
+            value = self.evaluate_expression(expr.expr, env)
+            for case in expr.cases:
+                if case.pattern == '_':
+                    return self.evaluate_expression(case.expr, env)
+                elif isinstance(case.pattern, (Number, Float, Boolean, String)):
+                    if value == self.evaluate_expression(case.pattern, env):
+                        return self.evaluate_expression(case.expr, env)
+                # For now, only handle simple patterns
+            raise ValueError("No matching case for value: {}".format(value))
         raise ValueError("Unknown expression type: {}".format(type(expr)))
 
     def import_module(self, module_name):
@@ -287,8 +299,8 @@ class Interpreter:
         try:
             with open(module_name, 'r') as f:
                 code = f.read()
-            from lexer import Lexer
-            from parser import Parser
+            from .lexer import Lexer
+            from .parser import Parser
             lexer = Lexer(code)
             tokens = lexer.tokenize()
             parser = Parser(tokens)
@@ -311,8 +323,8 @@ class ReturnValue:
 
 if __name__ == '__main__':
     import sys
-    from lexer import Lexer
-    from parser import Parser
+    from .lexer import Lexer
+    from .parser import Parser
     if len(sys.argv) > 1:
         try:
             with open(sys.argv[1], 'r') as f:

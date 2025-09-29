@@ -7,9 +7,9 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="veyra",
-    version="0.1.0",
+    version="0.1.1",
     author="Nishal",
-    author_email="nishal@example.com",
+    author_email="nishalamv@gmail.com",
     description="A modern programming language for web development and rapid prototyping",
     long_description=long_description,
     long_description_content_type="text/markdown",

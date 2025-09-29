@@ -1,4 +1,4 @@
-from lexer import Token
+from .lexer import Token
 
 class ASTNode:
     pass
@@ -114,6 +114,11 @@ class Index(Expression):
 class Dict(Expression):
     def __init__(self, items):
         self.items = items  # list of (key_expr, value_expr)
+
+class MatchExpression(Expression):
+    def __init__(self, expr, cases):
+        self.expr = expr
+        self.cases = cases
 
 class Case:
     def __init__(self, pattern, expr):

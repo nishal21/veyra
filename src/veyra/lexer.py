@@ -160,6 +160,14 @@ class Lexer:
                 op = self.current_char
                 self.advance()
                 tokens.append(Token('OPERATOR', op, self.line))
+            elif self.current_char == '.':
+                self.advance()
+                if self.current_char == '.':
+                    self.advance()
+                    tokens.append(Token('OPERATOR', '..', self.line))
+                else:
+                    # Invalid single dot
+                    raise ValueError('Invalid character: . at line {}'.format(self.line))
             elif self.current_char in '{}();,[]:':
                 tokens.append(Token('PUNCTUATION', self.current_char, self.line))
                 self.advance()
