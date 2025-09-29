@@ -1,0 +1,60 @@
+// Professional Veyra Example: Web App with AI/ML
+import "std";
+
+fn main() {
+    // File I/O
+    write_file("data.txt", "Hello from Veyra!");
+    let content = read_file("data.txt");
+    println(content);
+
+    // Web request
+    let response = http_get("http://httpbin.org/get");
+    if response {
+        let data = json_parse(response);
+        println("Web request successful");
+    } else {
+        println("Web request failed");
+    }
+
+    // AI/ML: Simple neural network simulation
+    let input = [0.5, 0.3];
+    let weights = [[0.1, 0.2], [0.3, 0.4]];
+    let output = matrix_multiply([input], weights);
+    let activated = relu(output[0][0]);
+    println("AI output: " + activated);
+
+    // Concurrency
+    let chan = channel();
+    send(chan, "Concurrent message");
+    let msg = receive(chan);
+    println(msg);
+
+    // Error handling
+    try {
+        let result = divide(10, 0);
+        println(result);
+    } catch err {
+        println("Error: " + err);
+    }
+
+    // Advanced features
+    let arr = [1, 2, 3, 4, 5];
+    for i in 0 .. 5 {
+        let squared = arr[i] * arr[i];
+        println(squared);
+    }
+
+    let matched = match rand() {
+        x if x > 0.5 => "High",
+        _ => "Low"
+    };
+    println("Random match: " + matched);
+}
+
+fn divide(a, b) {
+    if b == 0 {
+        // Simulate error
+        return a / b;
+    }
+    return a / b;
+}

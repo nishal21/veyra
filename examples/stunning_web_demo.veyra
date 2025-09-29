@@ -1,0 +1,22 @@
+// Stunning Veyra Website Demo
+fn main() {
+    let header = html_element("header", html_element("h1", "Welcome to Veyra"));
+    let nav = html_element("nav", "Home | About | Contact");
+    let content = ui_layout("column", [
+        html_element("p", "Veyra is the best language for stunning websites and UX."),
+        ui_form("text", "Your Name"),
+        ui_button("Get Started", "Starting...")
+    ]);
+    let footer = html_element("footer", "© 2025 Veyra");
+
+    let body = header + nav + content + footer;
+
+    let css = css_style("body", "font-family: Arial, sans-serif; margin: 0; padding: 20px; background: linear-gradient(to bottom, #f0f0f0, #ffffff)");
+    css = css + css_style(".navbar", "background: #333; color: white; padding: 10px; text-align: center");
+    css = css + css_style(".intro", "font-size: 18px; color: #666; margin: 20px 0");
+    css = css + responsive_css();
+
+    let page = create_page("Veyra Stunning Site", body, css);
+    println("Launching stunning website...");
+    web_serve(page, 8080);
+}

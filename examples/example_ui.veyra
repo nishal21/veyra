@@ -1,0 +1,23 @@
+// Veyra UI Example: Interactive Dashboard
+fn main() {
+    // Create a simple dashboard with UI components
+    let header = html_element("h1", "Veyra UI Dashboard", {"style": "color: #4CAF50; text-align: center;"});
+
+    let button = ui_button("Click Me!", "alert('Hello from Veyra!')");
+    let layout = ui_layout("column", [header, button]);
+
+    let form = ui_form("text", "Enter your name");
+
+    let accessible_button = ui_accessible("button", "Accessible Button");
+
+    let dashboard = html_element("div", layout + form + accessible_button, {"style": "padding: 20px; font-family: Arial;"});
+
+    let css = "
+    body { background: #f0f0f0; }
+    .fadeIn { animation: fadeIn 2s; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    ";
+
+    let page = create_page("Veyra UI Example", dashboard, css);
+    web_serve(page, 8081);
+}

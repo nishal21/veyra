@@ -1,0 +1,2 @@
+# Veyra dependencies
+# Currently no external dependencies required

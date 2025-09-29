@@ -1,0 +1,29 @@
+// Veyra AI Example: Linear Regression Demo
+fn main() {
+    // Sample data for linear regression
+    let X = [1, 2, 3, 4, 5];
+    let y = [2, 4, 6, 8, 10];
+
+    let model = ai_linear_regression(X, y);
+
+    let result_text = "Linear Regression Results:<br>Slope: " + model["slope"] + "<br>Intercept: " + model["intercept"];
+
+    let header = html_element("h1", "Veyra AI Linear Regression", {"style": "color: #2196F3; text-align: center;"});
+    let result_div = html_element("div", result_text, {"style": "background: #e3f2fd; padding: 20px; border-radius: 5px; margin: 20px;"});
+
+    let data_points = "Data Points:<br>";
+    for i in 0 .. 5 {
+        data_points = data_points + "X: " + X[i] + ", Y: " + y[i] + "<br>";
+    }
+
+    let data_div = html_element("div", data_points, {"style": "background: #f3e5f5; padding: 20px; border-radius: 5px; margin: 20px;"});
+
+    let body = html_element("div", header + data_div + result_div, {"style": "font-family: Arial;"});
+
+    let css = "
+    body { background: #fafafa; }
+    ";
+
+    let page = create_page("Veyra AI Example", body, css);
+    web_serve(page, 8081);
+}

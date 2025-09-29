@@ -1,0 +1,25 @@
+// Flawless Veyra UI/UX Demo
+fn main() {
+    println("Launching Veyra App with Stunning UX...");
+
+    let layout = ui_layout("row", [
+        ui_accessible("button", "Login"),
+        ui_accessible("button", "Sign Up")
+    ]);
+
+    let form = ui_form([
+        {"type": "text", "placeholder": "Username"},
+        {"type": "password", "placeholder": "Password"}
+    ]);
+
+    let anim_css = ui_animation(".button", "fadeIn");
+
+    println("UI Layout: " + layout);
+    println("Form: " + form);
+    println("Animation CSS: " + anim_css);
+
+    ui_button("Submit Form", "Form submitted successfully!");
+    ui_button("Animate", "Animation applied!");
+
+    println("App UX is flawless and stunning!");
+}

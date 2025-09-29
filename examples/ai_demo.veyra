@@ -1,0 +1,8 @@
+// Veyra AI Demo
+fn main() {
+    let X = [1, 2, 3, 4, 5];
+    let y = [2, 4, 6, 8, 10];
+    let model = ai_linear_regression(X, y);
+    println("Model slope: " + model["slope"]);
+    println("Model intercept: " + model["intercept"]);
+}

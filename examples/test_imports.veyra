@@ -1,0 +1,25 @@
+// Test import and standard library
+import "lib/math.veyra";
+
+fn main() {
+    let fact5 = factorial(5);
+    println("Factorial of 5: " + fact5);
+
+    let fib10 = fibonacci(10);
+    println("Fibonacci 10: " + fib10);
+
+    let g = gcd(48, 18);
+    println("GCD of 48 and 18: " + g);
+
+    let l = lcm(4, 5);
+    println("LCM of 4 and 5: " + l);
+
+    let upper = upper("hello");
+    println("Upper: " + upper);
+
+    let split_str = split("hello world", " ");
+    println("Split: " + split_str);
+
+    let joined = join(["a", "b", "c"], "-");
+    println("Joined: " + joined);
+}
