@@ -4,11 +4,23 @@ class ASTNode:
     pass
 
 class Program(ASTNode):
-    def __init__(self, statements, functions):
+    def __init__(self, statements, functions, classes):
         self.statements = statements
         self.functions = functions
+        self.classes = classes
 
 class Function(ASTNode):
+    def __init__(self, name, params, body):
+        self.name = name
+        self.params = params
+        self.body = body
+
+class ClassDefinition(ASTNode):
+    def __init__(self, name, methods):
+        self.name = name
+        self.methods = methods
+
+class Method(ASTNode):
     def __init__(self, name, params, body):
         self.name = name
         self.params = params
@@ -42,8 +54,8 @@ class LetStatement(ASTNode):
         self.expr = expr
 
 class AssignmentStatement(ASTNode):
-    def __init__(self, name, expr):
-        self.name = name
+    def __init__(self, target, expr):
+        self.target = target
         self.expr = expr
 
 class FunctionCallStatement(ASTNode):
@@ -63,8 +75,34 @@ class PrintStatement(ASTNode):
     def __init__(self, expr):
         self.expr = expr
 
+class ExpressionStatement(ASTNode):
+    def __init__(self, expr):
+        self.expr = expr
+
+class TryStatement(ASTNode):
+    def __init__(self, try_block, catch_var, catch_block):
+        self.try_block = try_block
+        self.catch_var = catch_var
+        self.catch_block = catch_block
+
 class Expression(ASTNode):
     pass
+
+class NewExpression(Expression):
+    def __init__(self, class_name, args):
+        self.class_name = class_name
+        self.args = args
+
+class AttributeAccess(Expression):
+    def __init__(self, object_expr, attr):
+        self.object_expr = object_expr
+        self.attr = attr
+
+class MethodCall(Expression):
+    def __init__(self, object_expr, method, args):
+        self.object_expr = object_expr
+        self.method = method
+        self.args = args
 
 class BinaryOp(Expression):
     def __init__(self, left, op, right):
@@ -147,12 +185,15 @@ class Parser:
     def parse(self):
         statements = []
         functions = []
+        classes = []
         while self.current_token and self.current_token.type != 'EOF':
             if self.current_token.value == 'fn':
                 functions.append(self.parse_function())
+            elif self.current_token.value == 'class':
+                classes.append(self.parse_class())
             else:
                 statements.append(self.parse_statement())
-        return Program(statements, functions)
+        return Program(statements, functions, classes)
 
     def parse_function(self):
         self.eat('KEYWORD')  # fn
@@ -172,6 +213,39 @@ class Parser:
         body = self.parse_block()
         self.eat('PUNCTUATION')  # }
         return Function(name, params, body)
+
+    def parse_class(self):
+        self.eat('KEYWORD')  # class
+        name = self.current_token.value
+        self.eat('IDENTIFIER')
+        self.eat('PUNCTUATION')  # {
+        methods = []
+        while self.current_token and self.current_token.value != '}':
+            if self.current_token.value == 'fn':
+                methods.append(self.parse_method())
+            else:
+                raise ValueError('Invalid class member')
+        self.eat('PUNCTUATION')  # }
+        return ClassDefinition(name, methods)
+
+    def parse_method(self):
+        self.eat('KEYWORD')  # fn
+        name = self.current_token.value
+        self.eat('IDENTIFIER')
+        self.eat('PUNCTUATION')  # (
+        params = []
+        if self.current_token.type == 'IDENTIFIER':
+            params.append(self.current_token.value)
+            self.eat('IDENTIFIER')
+            while self.current_token.value == ',':
+                self.eat('PUNCTUATION')
+                params.append(self.current_token.value)
+                self.eat('IDENTIFIER')
+        self.eat('PUNCTUATION')  # )
+        self.eat('PUNCTUATION')  # {
+        body = self.parse_block()
+        self.eat('PUNCTUATION')  # }
+        return Method(name, params, body)
 
     def parse_block(self):
         statements = []
@@ -239,14 +313,40 @@ class Parser:
                 self.eat('PUNCTUATION')  # )
                 self.eat('PUNCTUATION')  # ;
                 return PrintStatement(expr)
+            elif self.current_token.value == 'try':
+                self.advance()
+                self.eat('PUNCTUATION')  # {
+                try_block = self.parse_block()
+                self.eat('PUNCTUATION')  # }
+                self.eat('KEYWORD')  # catch
+                self.eat('PUNCTUATION')  # (
+                catch_var = self.current_token.value
+                self.eat('IDENTIFIER')
+                self.eat('PUNCTUATION')  # )
+                self.eat('PUNCTUATION')  # {
+                catch_block = self.parse_block()
+                self.eat('PUNCTUATION')  # }
+                return TryStatement(try_block, catch_var, catch_block)
         elif self.current_token.type == 'IDENTIFIER':
             name = self.current_token.value
             self.advance()
+            target = Variable(name)
+            while self.current_token and (self.current_token.value == '[' or self.current_token.value == '.'):
+                if self.current_token.value == '[':
+                    self.eat('PUNCTUATION')  # [
+                    index = self.parse_expression()
+                    self.eat('PUNCTUATION')  # ]
+                    target = Index(target, index)
+                elif self.current_token.value == '.':
+                    self.eat('PUNCTUATION')  # .
+                    attr = self.current_token.value
+                    self.eat('IDENTIFIER')
+                    target = AttributeAccess(target, attr)
             if self.current_token.value == '=':
                 self.eat('OPERATOR')  # =
                 expr = self.parse_expression()
                 self.eat('PUNCTUATION')  # ;
-                return AssignmentStatement(name, expr)
+                return AssignmentStatement(target, expr)
             elif self.current_token.value == '(':
                 self.eat('PUNCTUATION')  # (
                 args = []
@@ -258,6 +358,9 @@ class Parser:
                 self.eat('PUNCTUATION')  # )
                 self.eat('PUNCTUATION')  # ;
                 return FunctionCallStatement(name, args)
+            else:
+                self.eat('PUNCTUATION')  # ;
+                return ExpressionStatement(target)
         raise ValueError('Invalid statement: {} at line {}'.format(self.current_token, self.current_token.line))
 
     def parse_expression(self):
@@ -320,6 +423,19 @@ class Parser:
     def parse_primary(self):
         if self.current_token.type == 'KEYWORD' and self.current_token.value == 'match':
             return self.parse_match()
+        elif self.current_token.type == 'KEYWORD' and self.current_token.value == 'new':
+            self.advance()
+            class_name = self.current_token.value
+            self.eat('IDENTIFIER')
+            self.eat('PUNCTUATION')  # (
+            args = []
+            if self.current_token.value != ')':
+                args.append(self.parse_expression())
+                while self.current_token.value == ',':
+                    self.eat('PUNCTUATION')
+                    args.append(self.parse_expression())
+            self.eat('PUNCTUATION')  # )
+            return NewExpression(class_name, args)
         elif self.current_token.type == 'NUMBER':
             value = self.current_token.value
             self.advance()
@@ -340,24 +456,43 @@ class Parser:
         elif self.current_token.type == 'IDENTIFIER':
             name = self.current_token.value
             self.advance()
-            if self.current_token and self.current_token.value == '(':
-                self.eat('PUNCTUATION')  # (
-                args = []
-                if self.current_token.value != ')':
-                    args.append(self.parse_expression())
-                    while self.current_token.value == ',':
-                        self.eat('PUNCTUATION')
-                        args.append(self.parse_expression())
-                self.eat('PUNCTUATION')  # )
-                return FunctionCall(name, args)
-            else:
-                var = Variable(name)
-                while self.current_token and self.current_token.value == '[':
+            expr = Variable(name)
+            while self.current_token and (self.current_token.value == '[' or self.current_token.value == '.' or self.current_token.value == '('):
+                if self.current_token.value == '[':
                     self.eat('PUNCTUATION')  # [
                     index = self.parse_expression()
                     self.eat('PUNCTUATION')  # ]
-                    var = Index(var, index)
-                return var
+                    expr = Index(expr, index)
+                elif self.current_token.value == '.':
+                    self.eat('PUNCTUATION')  # .
+                    attr = self.current_token.value
+                    self.eat('IDENTIFIER')
+                    if self.current_token.value == '(':
+                        # Method call
+                        self.eat('PUNCTUATION')  # (
+                        args = []
+                        if self.current_token.value != ')':
+                            args.append(self.parse_expression())
+                            while self.current_token.value == ',':
+                                self.eat('PUNCTUATION')
+                                args.append(self.parse_expression())
+                        self.eat('PUNCTUATION')  # )
+                        expr = MethodCall(expr, attr, args)
+                    else:
+                        expr = AttributeAccess(expr, attr)
+                elif self.current_token.value == '(':
+                    # Function call
+                    self.eat('PUNCTUATION')  # (
+                    args = []
+                    if self.current_token.value != ')':
+                        args.append(self.parse_expression())
+                        while self.current_token.value == ',':
+                            self.eat('PUNCTUATION')
+                            args.append(self.parse_expression())
+                    self.eat('PUNCTUATION')  # )
+                    expr = FunctionCall(name, args)
+                    break  # No more chaining after function call
+            return expr
         elif self.current_token.value == '[':
             self.eat('PUNCTUATION')  # [
             elements = []

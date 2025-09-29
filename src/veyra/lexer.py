@@ -103,7 +103,7 @@ class Lexer:
                 tokens.append(Token('NUMBER', self.read_number(), self.line))
             elif self.current_char.isalpha() or self.current_char == '_':
                 ident = self.read_identifier()
-                if ident in ['fn', 'let', 'if', 'else', 'return', 'println', 'while', 'true', 'false', 'for', 'in', 'match', 'import']:
+                if ident in ['fn', 'let', 'if', 'else', 'return', 'println', 'while', 'true', 'false', 'for', 'in', 'match', 'import', 'class', 'try', 'catch', 'new']:
                     tokens.append(Token('KEYWORD', ident, self.line))
                 else:
                     tokens.append(Token('IDENTIFIER', ident, self.line))
@@ -166,8 +166,7 @@ class Lexer:
                     self.advance()
                     tokens.append(Token('OPERATOR', '..', self.line))
                 else:
-                    # Invalid single dot
-                    raise ValueError('Invalid character: . at line {}'.format(self.line))
+                    tokens.append(Token('PUNCTUATION', '.', self.line))
             elif self.current_char in '{}();,[]:':
                 tokens.append(Token('PUNCTUATION', self.current_char, self.line))
                 self.advance()

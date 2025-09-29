@@ -14,12 +14,12 @@ fn main() {
     //     println("Web request failed");
     // }
 
-    // AI/ML: Simple neural network simulation - commented out as not implemented
-    // let input = [0.5, 0.3];
-    // let weights = [[0.1, 0.2], [0.3, 0.4]];
-    // let output = matrix_multiply([input], weights);
-    // let activated = relu(output[0][0]);
-    // println("AI output: " + activated);
+    // AI/ML: Simple neural network simulation
+    let input = [0.5, 0.3];
+    let weights = [[0.1, 0.2], [0.3, 0.4]];
+    let output = matrix_multiply([input], weights);
+    let activated = relu(output[0][0]);
+    println("AI output: " + activated);
 
     // Concurrency
     let chan = channel();
@@ -27,13 +27,13 @@ fn main() {
     let msg = receive(chan);
     println(msg);
 
-    // Error handling - commented out as not implemented
-    // try {
-    //     let result = divide(10, 0);
-    //     println(result);
-    // } catch err {
-    //     println("Error: " + err);
-    // }
+    // Error handling
+    try {
+        let result = divide(10, 0);
+        println(result);
+    } catch (err) {
+        println("Error: " + err);
+    }
 
     // Advanced features
     let arr = [1, 2, 3, 4, 5];

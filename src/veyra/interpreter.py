@@ -1,15 +1,18 @@
-from .parser import Program, Function, Block, LetStatement, AssignmentStatement, FunctionCallStatement, IfStatement, WhileStatement, ForStatement, ReturnStatement, PrintStatement, ImportStatement, BinaryOp, UnaryOp, Number, Float, Boolean, String, Variable, FunctionCall, Array, Index, Dict, MatchExpression, Case
+from .parser import Program, Function, Block, LetStatement, AssignmentStatement, FunctionCallStatement, IfStatement, WhileStatement, ForStatement, ReturnStatement, PrintStatement, ImportStatement, BinaryOp, UnaryOp, Number, Float, Boolean, String, Variable, FunctionCall, Array, Index, Dict, MatchExpression, Case, TryStatement, ClassDefinition, Method, NewExpression, AttributeAccess, MethodCall, ExpressionStatement, TryStatement, ClassDefinition, Method, NewExpression, AttributeAccess, MethodCall, ExpressionStatement
 
 class Interpreter:
     def __init__(self):
         self.global_env = {}
         self.functions = {}
+        self.classes = {}
         self.channels = {}  # id to queue
 
     def interpret(self, program):
         print("Starting interpretation")
         for func in program.functions:
             self.functions[func.name] = func
+        for cls in program.classes:
+            self.classes[cls.name] = cls
         # Execute top-level statements (including imports)
         for stmt in program.statements:
             self.execute_statement(stmt, self.global_env)
@@ -50,15 +53,18 @@ class Interpreter:
             # Simple HTTP server
             import http.server
             import socketserver
+            import threading
             class Handler(http.server.SimpleHTTPRequestHandler):
                 def do_GET(self):
                     self.send_response(200)
                     self.send_header('Content-type', 'text/html')
                     self.end_headers()
                     self.wfile.write(html_content.encode('utf-8'))
-            with socketserver.TCPServer(("", port), Handler) as httpd:
-                httpd.serve_forever()
-            return "Saved"
+            def run_server():
+                with socketserver.TCPServer(("", port), Handler) as httpd:
+                    httpd.serve_forever()
+            threading.Thread(target=run_server).start()
+            return "Server started on port {}".format(port)
         elif name == 'html_element':
             tag, content = args[0], args[1] if len(args) > 1 else ""
             attrs = args[2] if len(args) > 2 else {}
@@ -120,6 +126,23 @@ class Interpreter:
             return str(args[0]).startswith(args[1])
         elif name == 'endswith':
             return str(args[0]).endswith(args[1])
+        elif name == 'substring':
+            s = str(args[0])
+            start = args[1]
+            end = args[2] if len(args) > 2 else len(s)
+            return s[start:end]
+        elif name == 'index_of':
+            return str(args[0]).find(args[1])
+        elif name == 'last_index_of':
+            return str(args[0]).rfind(args[1])
+        elif name == 'trim':
+            return str(args[0]).strip()
+        elif name == 'to_string':
+            return str(args[0])
+        elif name == 'to_int':
+            return int(args[0])
+        elif name == 'to_float':
+            return float(args[0])
         elif name == 'ai_linear_regression':
             # Simple implementation
             X, y = args
@@ -147,9 +170,76 @@ class Interpreter:
         elif name == 'replace':
             string, old, new = args
             return string.replace(old, new)
+        elif name == 'read_file':
+            filename = args[0]
+            try:
+                with open(filename, 'r') as f:
+                    return f.read()
+            except:
+                return "Error reading file"
+        elif name == 'write_file':
+            filename, content = args
+            try:
+                with open(filename, 'w') as f:
+                    f.write(content)
+                return "File written"
+            except:
+                return "Error writing file"
+        elif name == 'list_dir':
+            import os
+            dirname = args[0] if args else '.'
+            try:
+                return os.listdir(dirname)
+            except:
+                return "Error listing directory"
+        elif name == 'json_parse':
+            import json
+            return json.loads(args[0])
+        elif name == 'json_stringify':
+            import json
+            return json.dumps(args[0])
+        elif name == 'time_now':
+            import time
+            return time.time()
+        elif name == 'sleep':
+            import time
+            time.sleep(args[0])
+            return None
         elif name == 'rand':
             import random
             return random.random()
+        elif name == 'matrix_multiply':
+            # Simple matrix multiplication
+            a, b = args
+            if not a or not b or len(a[0]) != len(b):
+                raise ValueError("Invalid matrix dimensions")
+            result = []
+            for i in range(len(a)):
+                row = []
+                for j in range(len(b[0])):
+                    val = 0
+                    for k in range(len(b)):
+                        val += a[i][k] * b[k][j]
+                    row.append(val)
+                result.append(row)
+            return result
+        elif name == 'relu':
+            x = args[0]
+            return max(0, x)
+        elif name == 'sigmoid':
+            import math
+            x = args[0]
+            return 1 / (1 + math.exp(-x))
+        elif name == 'tanh':
+            import math
+            x = args[0]
+            return math.tanh(x)
+        elif name == 'softmax':
+            import math
+            arr = args[0]
+            exp_arr = [math.exp(x) for x in arr]
+            sum_exp = sum(exp_arr)
+            return [x / sum_exp for x in exp_arr]
         else:
             func = self.functions[name]
         if len(args) != len(func.params):
@@ -159,6 +249,34 @@ class Interpreter:
         if isinstance(result, ReturnValue):
             return result.value
         return None
+
+    def call_method(self, instance, method, args):
+        if len(args) != len(method.params):
+            raise ValueError("Method {} expects {} arguments, got {}".format(method.name, len(method.params), len(args)))
+        local_env = dict(zip(method.params, args))
+        local_env['self'] = instance
+        result = self.execute_block(method.body, local_env)
+        if isinstance(result, ReturnValue):
+            return result.value
+        return None
+
+    def assign_expression(self, target, value, env):
+        if isinstance(target, Variable):
+            if target.name in env:
+                env[target.name] = value
+            elif target.name in self.global_env:
+                self.global_env[target.name] = value
+            else:
+                raise ValueError("Undefined variable: {}".format(target.name))
+        elif isinstance(target, Index):
+            array = self.evaluate_expression(target.array, env)
+            index = self.evaluate_expression(target.index, env)
+            array[index] = value
+        elif isinstance(target, AttributeAccess):
+            obj = self.evaluate_expression(target.object_expr, env)
+            obj.fields[target.attr] = value
+        else:
+            raise ValueError("Invalid assignment target")
 
     def execute_block(self, block, env):
         for stmt in block.statements:
@@ -172,11 +290,8 @@ class Interpreter:
             value = self.evaluate_expression(stmt.expr, env)
             env[stmt.name] = value
         elif isinstance(stmt, AssignmentStatement):
-            if stmt.name in env:
-                value = self.evaluate_expression(stmt.expr, env)
-                env[stmt.name] = value
-            else:
-                raise ValueError("Undefined variable: {}".format(stmt.name))
+            value = self.evaluate_expression(stmt.expr, env)
+            self.assign_expression(stmt.target, value, env)
         elif isinstance(stmt, FunctionCallStatement):
             args = [self.evaluate_expression(arg, env) for arg in stmt.args]
             self.call_function(stmt.name, args)
@@ -211,6 +326,19 @@ class Interpreter:
         elif isinstance(stmt, PrintStatement):
             value = self.evaluate_expression(stmt.expr, env)
             print(value)
+        elif isinstance(stmt, TryStatement):
+            try:
+                result = self.execute_block(stmt.try_block, env)
+                if isinstance(result, ReturnValue):
+                    return result
+            except Exception as e:
+                catch_env = dict(env)
+                catch_env[stmt.catch_var] = str(e)
+                result = self.execute_block(stmt.catch_block, catch_env)
+                if isinstance(result, ReturnValue):
+                    return result
+        elif isinstance(stmt, ExpressionStatement):
+            self.evaluate_expression(stmt.expr, env)
         return None
 
     def evaluate_expression(self, expr, env):
@@ -236,6 +364,14 @@ class Interpreter:
                 return array[index]
             else:
                 raise ValueError("Cannot index non-array or non-dict")
+        elif isinstance(expr, AttributeAccess):
+            obj = self.evaluate_expression(expr.object_expr, env)
+            return obj.fields[expr.attr]
+        elif isinstance(expr, MethodCall):
+            obj = self.evaluate_expression(expr.object_expr, env)
+            args = [self.evaluate_expression(arg, env) for arg in expr.args]
+            method = next(m for m in obj.cls.methods if m.name == expr.method)
+            return self.call_method(obj, method, args)
         elif isinstance(expr, BinaryOp):
             left = self.evaluate_expression(expr.left, env)
             right = self.evaluate_expression(expr.right, env)
@@ -282,6 +418,15 @@ class Interpreter:
             return elements  # Return as list
         elif isinstance(expr, Dict):
             return {self.evaluate_expression(k, env): self.evaluate_expression(v, env) for k, v in expr.items}
+        elif isinstance(expr, NewExpression):
+            cls = self.classes[expr.class_name]
+            instance = VeyraInstance(cls)
+            # Call constructor if exists
+            if 'init' in [m.name for m in cls.methods]:
+                init_method = next(m for m in cls.methods if m.name == 'init')
+                args = [self.evaluate_expression(arg, env) for arg in expr.args]
+                self.call_method(instance, init_method, args)
+            return instance
         elif isinstance(expr, MatchExpression):
             value = self.evaluate_expression(expr.expr, env)
             for case in expr.cases:
@@ -296,26 +441,39 @@ class Interpreter:
 
     def import_module(self, module_name):
         # Load and execute the module
-        try:
-            with open(module_name, 'r') as f:
-                code = f.read()
-            from .lexer import Lexer
-            from .parser import Parser
-            lexer = Lexer(code)
-            tokens = lexer.tokenize()
-            parser = Parser(tokens)
-            module_ast = parser.parse()
-            # Execute in a new environment, but merge into global
-            module_env = {}
-            for func in module_ast.functions:
-                self.functions[func.name] = func
-            for stmt in module_ast.statements:
-                if isinstance(stmt, LetStatement):
-                    value = self.evaluate_expression(stmt.expr, module_env)
-                    self.global_env[stmt.name] = value
-                # Skip other statements for now
-        except Exception as e:
-            raise ValueError('Error importing {}: {}'.format(module_name, e))
+        import os
+        paths = [module_name, os.path.join('lib', module_name), os.path.join(os.path.dirname(__file__), 'lib', module_name), os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src', 'veyra', 'lib', module_name)]
+        for path in paths:
+            if os.path.exists(path):
+                try:
+                    with open(path, 'r') as f:
+                        code = f.read()
+                    from .lexer import Lexer
+                    from .parser import Parser
+                    lexer = Lexer(code)
+                    tokens = lexer.tokenize()
+                    parser = Parser(tokens)
+                    module_ast = parser.parse()
+                    # Execute in a new environment, but merge into global
+                    module_env = {}
+                    for func in module_ast.functions:
+                        self.functions[func.name] = func
+                    for cls in module_ast.classes:
+                        self.classes[cls.name] = cls
+                    for stmt in module_ast.statements:
+                        if isinstance(stmt, LetStatement):
+                            value = self.evaluate_expression(stmt.expr, module_env)
+                            self.global_env[stmt.name] = value
+                        # Skip other statements for now
+                    return
+                except Exception as e:
+                    raise ValueError('Error importing {}: {}'.format(module_name, e))
+        raise ValueError('Module {} not found'.format(module_name))
+
+class VeyraInstance:
+    def __init__(self, cls):
+        self.cls = cls
+        self.fields = {}
 
 class ReturnValue:
     def __init__(self, value):

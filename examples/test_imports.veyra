@@ -1,5 +1,5 @@
 // Test import and standard library
-import "lib/math.veyra";
+import "src/veyra/lib/math.veyra";
 
 fn main() {
     let fact5 = factorial(5);
