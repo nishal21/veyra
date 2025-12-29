@@ -1,0 +1,7 @@
+// Hello World in Veyra Native
+// The simplest Veyra program
+
+fn main() {
+    println("Hello, Veyra!");
+    println("Welcome to the world's fastest programming language!");
+}

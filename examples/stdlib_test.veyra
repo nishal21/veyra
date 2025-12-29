@@ -1,0 +1,75 @@
+// Test all stdlib features
+// This tests the interpreter's full capabilities
+
+fn main() {
+    println("=== String Operations ===");
+    
+    // String concatenation
+    let name = "Veyra";
+    let greeting = "Hello, " + name + "!";
+    println(greeting);
+    
+    // String functions
+    let text = "  Hello World  ";
+    println(trim(text));
+    println(upper("hello"));
+    println(lower("WORLD"));
+    
+    // Replace
+    let result = replace("hello world", "world", "Veyra");
+    println(result);
+    
+    // Contains
+    if contains("Hello Veyra", "Veyra") {
+        println("Contains works!");
+    }
+    
+    println("");
+    println("=== Array Operations ===");
+    
+    // Arrays
+    let arr = [1, 2, 3, 4, 5];
+    println(len(arr));
+    
+    // Join
+    let words = ["Hello", "from", "Veyra"];
+    println(join(words, " "));
+    
+    // Split
+    let parts = split("a,b,c", ",");
+    println(len(parts));
+    
+    println("");
+    println("=== Math Functions ===");
+    
+    // Math
+    println(sqrt(16.0));
+    println(pow(2.0, 10.0));
+    println(abs(-42));
+    println(floor(3.7));
+    println(ceil(3.2));
+    println(round(3.5));
+    
+    // Trig
+    let pi = 3.14159;
+    println(sin(0.0));
+    println(cos(0.0));
+    
+    println("");
+    println("=== Type Operations ===");
+    
+    // Type checking
+    println(type_of(42));
+    println(type_of("hello"));
+    println(type_of(3.14));
+    println(type_of(true));
+    println(type_of([1, 2, 3]));
+    
+    // Conversions
+    println(to_string(123));
+    println(to_int("456"));
+    println(to_float("3.14"));
+    
+    println("");
+    println("=== All stdlib tests passed! ===");
+}

@@ -1,0 +1,87 @@
+// Advanced Veyra Language Feature Test
+// Testing more complex functionality
+
+fn main() {
+    // Test 1: Floats
+    println("=== Test 1: Floats ===");
+    let pi = 3.14159;
+    println(pi);
+    
+    // Test 2: Float arithmetic
+    println("=== Test 2: Float math ===");
+    let radius = 5.0;
+    let area = 3.14159 * radius * radius;
+    println(area);
+    
+    // Test 3: Recursive function (factorial)
+    println("=== Test 3: Recursion ===");
+    let fact5 = factorial(5);
+    println(fact5);  // 120
+    
+    // Test 4: Fibonacci
+    println("=== Test 4: Fibonacci ===");
+    let fib10 = fibonacci(10);
+    println(fib10);  // 55
+    
+    // Test 5: Boolean logic
+    println("=== Test 5: Booleans ===");
+    let t = true;
+    let f = false;
+    if t {
+        println(1);
+    }
+    if !f {
+        println(1);
+    }
+    
+    // Test 6: Nested conditionals
+    println("=== Test 6: Nested if ===");
+    let score = 85;
+    if score >= 90 {
+        println(4);  // A
+    } else {
+        if score >= 80 {
+            println(3);  // B
+        } else {
+            println(2);  // C
+        }
+    }
+    
+    // Test 7: Compound expressions
+    println("=== Test 7: Compound ===");
+    let result = (10 + 5) * 2;
+    println(result);  // 30
+    
+    // Test 8: Negative numbers
+    println("=== Test 8: Negatives ===");
+    let neg = -42;
+    println(neg);
+    
+    // Test 9: Multiple return paths
+    println("=== Test 9: Returns ===");
+    println(abs(-10));  // 10
+    println(abs(10));   // 10
+    
+    println("=== Advanced tests complete! ===");
+}
+
+fn factorial(n: int) -> int {
+    if n <= 1 {
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
+
+fn fibonacci(n: int) -> int {
+    if n <= 1 {
+        return n;
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+fn abs(x: int) -> int {
+    if x < 0 {
+        return -x;
+    }
+    return x;
+}

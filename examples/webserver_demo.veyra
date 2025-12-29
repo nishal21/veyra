@@ -1,0 +1,23 @@
+// Veyra Web Server Demo
+// Run this to start a web server!
+
+fn main() {
+    println("🚀 Veyra Web Server Demo");
+    println("");
+    
+    // Build HTML page
+    let page_content = h1("Welcome to Veyra!") + 
+        p("This page is generated and served by Veyra.") +
+        p("A fast, modern programming language.") +
+        button("Click Me") +
+        style("body { font-family: Arial; padding: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; } h1 { font-size: 3em; } p { font-size: 1.2em; margin: 10px 0; } button { padding: 15px 30px; font-size: 1.2em; background: white; color: #764ba2; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; }");
+    
+    let full_page = html(page_content);
+    
+    println("Starting server on port 8080...");
+    println("Open: http://localhost:8080");
+    println("");
+    
+    // Serve it!
+    serve_html(full_page, 8080);
+}

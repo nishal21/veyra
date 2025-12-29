@@ -1,0 +1,81 @@
+// Functions Demo
+// Demonstrates function definitions, parameters, and return values
+
+fn main() {
+    println("=== Functions Demo ===\n");
+    
+    // Simple function call
+    greet("World");
+    greet("Veyra");
+    
+    // Functions with return values
+    let sum = add(10, 20);
+    println("10 + 20 = " + sum);
+    
+    let product = multiply(7, 8);
+    println("7 * 8 = " + product);
+    
+    // Recursive function
+    println("\n=== Fibonacci ===");
+    for i in 0..10 {
+        println("fib(" + i + ") = " + fibonacci(i));
+    }
+    
+    // Factorial
+    println("\n=== Factorial ===");
+    for i in 1..8 {
+        println(i + "! = " + factorial(i));
+    }
+    
+    // Higher-order function simulation
+    println("\n=== Array Processing ===");
+    process_numbers();
+    
+    println("\n=== Demo Complete ===");
+}
+
+fn greet(name: string) {
+    println("Hello, " + name + "!");
+}
+
+fn add(a: int, b: int) -> int {
+    return a + b;
+}
+
+fn multiply(a: int, b: int) -> int {
+    return a * b;
+}
+
+fn fibonacci(n: int) -> int {
+    if n <= 1 {
+        return n;
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+fn factorial(n: int) -> int {
+    if n <= 1 {
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
+
+fn process_numbers() {
+    let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    
+    println("Numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]");
+    
+    // Sum
+    let total = 0;
+    for i in 0..10 {
+        total = total + numbers[i];
+    }
+    println("Sum: " + total);
+    
+    // Squares
+    println("Squares:");
+    for i in 0..10 {
+        let sq = numbers[i] * numbers[i];
+        println("  " + numbers[i] + "² = " + sq);
+    }
+}

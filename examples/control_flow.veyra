@@ -1,0 +1,80 @@
+// Control Flow Demo
+// If/else, loops, and match expressions
+
+fn main() {
+    println("=== Control Flow Demo ===\n");
+    
+    // If-else statements
+    println("--- If/Else ---");
+    let score = 85;
+    
+    if score >= 90 {
+        println("Grade: A - Excellent!");
+    } else if score >= 80 {
+        println("Grade: B - Very Good!");
+    } else if score >= 70 {
+        println("Grade: C - Good");
+    } else if score >= 60 {
+        println("Grade: D - Passing");
+    } else {
+        println("Grade: F - Needs Improvement");
+    }
+    
+    // While loop
+    println("\n--- While Loop ---");
+    println("Countdown:");
+    let count = 5;
+    while count > 0 {
+        println("  " + count + "...");
+        count = count - 1;
+    }
+    println("  Liftoff!");
+    
+    // For loop with range
+    println("\n--- For Loop ---");
+    println("Numbers 1-10:");
+    for i in 1..11 {
+        println("  " + i);
+    }
+    
+    // Nested loops
+    println("\n--- Multiplication Table ---");
+    for i in 1..6 {
+        let row = "";
+        for j in 1..6 {
+            let product = i * j;
+            row = row + "  " + product;
+        }
+        println(row);
+    }
+    
+    // FizzBuzz
+    println("\n--- FizzBuzz (1-20) ---");
+    for i in 1..21 {
+        if i % 15 == 0 {
+            println("FizzBuzz");
+        } else if i % 3 == 0 {
+            println("Fizz");
+        } else if i % 5 == 0 {
+            println("Buzz");
+        } else {
+            println(i);
+        }
+    }
+    
+    // Match expression
+    println("\n--- Match Expression ---");
+    let day = 3;
+    match day {
+        1 => println("Monday"),
+        2 => println("Tuesday"),
+        3 => println("Wednesday"),
+        4 => println("Thursday"),
+        5 => println("Friday"),
+        6 => println("Saturday"),
+        7 => println("Sunday"),
+        _ => println("Invalid day")
+    }
+    
+    println("\n=== Demo Complete ===");
+}

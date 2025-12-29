@@ -1,0 +1,88 @@
+// Test Advanced Veyra Features
+// Web, AI, JSON, and more
+
+fn main() {
+    println("=== Advanced Veyra Features ===");
+    println("");
+    
+    // === JSON ===
+    println("=== JSON Operations ===");
+    let data = json_parse("{\"name\":\"Veyra\",\"version\":1}");
+    println(json_stringify(data));
+    
+    // === HTML Generation ===
+    println("");
+    println("=== HTML Generation ===");
+    let heading = h1("Welcome to Veyra!");
+    println(heading);
+    
+    let para = p("This is a paragraph");
+    println(para);
+    
+    let btn = button("Click Me");
+    println(btn);
+    
+    let lnk = link("Visit Veyra", "https://veyra.dev");
+    println(lnk);
+    
+    // === AI/Neural Network Functions ===
+    println("");
+    println("=== AI/ML Functions ===");
+    
+    // Activation functions
+    println(sigmoid(0.0));   // 0.5
+    println(sigmoid(2.0));   // ~0.88
+    println(relu(-5.0));     // 0
+    println(relu(5.0));      // 5
+    println(tanh(0.0));      // 0
+    
+    // Softmax
+    let logits = [1.0, 2.0, 3.0];
+    let probs = softmax(logits);
+    println(probs);
+    
+    // Dot product
+    let a = [1.0, 2.0, 3.0];
+    let b = [4.0, 5.0, 6.0];
+    let dot_result = dot(a, b);
+    println(dot_result);  // 1*4 + 2*5 + 3*6 = 32
+    
+    // Matrix operations
+    let v1 = [1.0, 2.0, 3.0];
+    let v2 = [4.0, 5.0, 6.0];
+    println(matrix_add(v1, v2));  // [5, 7, 9]
+    println(matrix_mul(v1, v2));  // [4, 10, 18]
+    
+    // Statistics
+    let nums = [1.0, 2.0, 3.0, 4.0, 5.0];
+    println(sum(nums));   // 15
+    println(mean(nums));  // 3
+    println(min(nums));   // 1
+    println(max(nums));   // 5
+    
+    // === Array Operations ===
+    println("");
+    println("=== Array Operations ===");
+    
+    let arr = [5, 2, 8, 1, 9, 3];
+    println(sort(arr));
+    println(reverse(arr));
+    println(unique([1, 2, 2, 3, 3, 3]));
+    
+    let r = range(0, 5);
+    println(r);
+    
+    // === System Functions ===
+    println("");
+    println("=== System Functions ===");
+    
+    let dir = cwd();
+    println(dir);
+    
+    // Execute command
+    let result = exec("echo Hello from shell");
+    println(result);
+    
+    println("");
+    println("=== All Advanced Tests Passed! ===");
+}

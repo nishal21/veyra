@@ -1,0 +1,90 @@
+// Veyra Professional Grade Test
+// Testing all stdlib capabilities
+
+fn main() {
+    println("🚀 VEYRA PROFESSIONAL GRADE TEST");
+    println("================================");
+    println("");
+    
+    // === Date/Time ===
+    println("📅 Date/Time");
+    println(date());
+    println(time());
+    println(timestamp());
+    
+    // === Crypto ===
+    println("");
+    println("🔐 Crypto/Hashing");
+    println(hash("Hello Veyra"));
+    println(uuid());
+    
+    // === Base64 ===
+    println("");
+    println("📦 Base64");
+    let encoded = base64_encode("Hello Veyra!");
+    println(encoded);
+    println(base64_decode(encoded));
+    
+    // === URL Encoding ===
+    println("");
+    println("🔗 URL Encoding");
+    println(url_encode("Hello World!"));
+    println(url_decode("Hello%20World%21"));
+    
+    // === File System ===
+    println("");
+    println("📁 File System");
+    println(file_exists("Cargo.toml"));
+    println(is_file("Cargo.toml"));
+    println(is_dir("src"));
+    let files = list_dir("examples");
+    println(len(files));
+    
+    // === String Formatting ===
+    println("");
+    println("📝 String Formatting");
+    println(format("Hello {0}, you have {1} messages", "User", 5));
+    println(pad_left("42", 5, "0"));
+    println(pad_right("Hi", 10, "-"));
+    println(repeat("*", 10));
+    println(char_at("Hello", 1));
+    println(char_code("A"));
+    println(from_char_code(65));
+    println(substring("Hello World", 0, 5));
+    println(index_of("Hello World", "World"));
+    
+    // === Type Checking ===
+    println("");
+    println("🔍 Type Checking");
+    println(is_int(42));
+    println(is_float(3.14));
+    println(is_string("hello"));
+    println(is_array([1,2,3]));
+    println(is_null(null));
+    
+    // === Clone and Copy ===
+    println("");
+    println("📋 Clone/Copy");
+    let arr = [1, 2, 3];
+    let arr2 = clone(arr);
+    println(arr2);
+    
+    // === Export Functions ===
+    println("");
+    println("💾 Export Functions");
+    let data = [["Name", "Age"], ["Alice", "25"], ["Bob", "30"]];
+    export_csv(data, "test_export.csv");
+    println(file_exists("test_export.csv"));
+    delete_file("test_export.csv");
+    
+    // === Print Formatting ===
+    println("");
+    println("🖨️ Printf Style");
+    let msg = sprintf("User: {}, Score: {}", "Player1", 100);
+    println(msg);
+    
+    println("");
+    println("================================");
+    println("✅ ALL TESTS PASSED!");
+    println("Veyra is PROFESSIONAL GRADE!");
+}

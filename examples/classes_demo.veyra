@@ -1,0 +1,113 @@
+// Classes and Object-Oriented Programming Demo
+// Demonstrates Veyra's class system
+
+class Point {
+    let x: float;
+    let y: float;
+    
+    fn distance_from_origin() -> float {
+        return sqrt(self.x * self.x + self.y * self.y);
+    }
+    
+    fn move(dx: float, dy: float) {
+        self.x = self.x + dx;
+        self.y = self.y + dy;
+    }
+}
+
+class Rectangle {
+    let width: float;
+    let height: float;
+    
+    fn area() -> float {
+        return self.width * self.height;
+    }
+    
+    fn perimeter() -> float {
+        return 2.0 * (self.width + self.height);
+    }
+    
+    fn is_square() -> bool {
+        return self.width == self.height;
+    }
+}
+
+class Person {
+    let name: string;
+    let age: int;
+    
+    fn greet() {
+        println("Hello, my name is " + self.name);
+        println("I am " + self.age + " years old");
+    }
+    
+    fn have_birthday() {
+        self.age = self.age + 1;
+        println("Happy birthday! Now " + self.name + " is " + self.age);
+    }
+}
+
+class Counter {
+    let value: int;
+    
+    fn increment() {
+        self.value = self.value + 1;
+    }
+    
+    fn decrement() {
+        self.value = self.value - 1;
+    }
+    
+    fn reset() {
+        self.value = 0;
+    }
+    
+    fn get() -> int {
+        return self.value;
+    }
+}
+
+fn main() {
+    println("=== Object-Oriented Programming Demo ===\n");
+    
+    // Point class
+    println("--- Point Class ---");
+    let p = new Point(3.0, 4.0);
+    println("Point: (" + p.x + ", " + p.y + ")");
+    println("Distance from origin: " + p.distance_from_origin());
+    p.move(2.0, 1.0);
+    println("After move: (" + p.x + ", " + p.y + ")");
+    
+    // Rectangle class
+    println("\n--- Rectangle Class ---");
+    let rect = new Rectangle(5.0, 3.0);
+    println("Rectangle: " + rect.width + " x " + rect.height);
+    println("Area: " + rect.area());
+    println("Perimeter: " + rect.perimeter());
+    println("Is square: " + rect.is_square());
+    
+    let square = new Rectangle(4.0, 4.0);
+    println("\nSquare: " + square.width + " x " + square.height);
+    println("Is square: " + square.is_square());
+    
+    // Person class
+    println("\n--- Person Class ---");
+    let alice = new Person("Alice", 25);
+    alice.greet();
+    alice.have_birthday();
+    
+    // Counter class
+    println("\n--- Counter Class ---");
+    let counter = new Counter(0);
+    println("Initial value: " + counter.get());
+    counter.increment();
+    counter.increment();
+    counter.increment();
+    println("After 3 increments: " + counter.get());
+    counter.decrement();
+    println("After 1 decrement: " + counter.get());
+    counter.reset();
+    println("After reset: " + counter.get());
+    
+    println("\n=== Demo Complete ===");
+}

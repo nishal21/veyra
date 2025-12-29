@@ -1,0 +1,57 @@
+// Variables, Types, and Basic Operations Demo
+// Showcases Veyra's type system and expressions
+
+fn main() {
+    // Type Inference
+    let message = "Hello, Veyra!";
+    let count = 42;
+    let pi = 3.14159;
+    let active = true;
+    
+    println("=== Variables Demo ===");
+    println(message);
+    println("Count: " + count);
+    println("Pi: " + pi);
+    
+    // Arithmetic Operations
+    println("\n=== Math Operations ===");
+    let a = 10;
+    let b = 3;
+    
+    println("10 + 3 = " + (a + b));
+    println("10 - 3 = " + (a - b));
+    println("10 * 3 = " + (a * b));
+    println("10 / 3 = " + (a / b));
+    println("10 % 3 = " + (a % b));
+    println("10 ** 3 = " + (a ** b));  // Power
+    
+    // Comparison Operations
+    println("\n=== Comparisons ===");
+    println("10 > 3: " + (a > b));
+    println("10 < 3: " + (a < b));
+    println("10 == 3: " + (a == b));
+    println("10 != 3: " + (a != b));
+    
+    // Logical Operations
+    println("\n=== Logical Operations ===");
+    let x = true;
+    let y = false;
+    println("true && false: " + (x && y));
+    println("true || false: " + (x || y));
+    println("!true: " + (!x));
+    
+    // Arrays
+    println("\n=== Arrays ===");
+    let numbers = [1, 2, 3, 4, 5];
+    println("First element: " + numbers[0]);
+    println("Array length: " + len(numbers));
+    
+    // Strings
+    println("\n=== Strings ===");
+    let name = "Veyra";
+    let greeting = "Hello, " + name + "!";
+    println(greeting);
+    println("Length: " + len(greeting));
+    
+    println("\n=== Demo Complete ===");
+}

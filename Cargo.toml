@@ -1,0 +1,47 @@
+[package]
+name = "veyra"
+version = "1.0.0"
+edition = "2021"
+authors = ["Veyra Team"]
+description = "The Veyra Programming Language - Fast, Simple, Universal"
+license = "MIT"
+repository = "https://github.com/veyra-lang/veyra"
+keywords = ["programming-language", "compiler", "llvm", "fast"]
+categories = ["compilers", "development-tools"]
+
+[dependencies]
+# High-performance lexer
+logos = "0.14"
+
+# CLI argument parsing
+clap = { version = "4.4", features = ["derive"] }
+
+# Beautiful colored output
+colored = "2.1"
+
+# LLVM bindings for code generation (LLVM 17)
+inkwell = { version = "0.4", features = ["llvm17-0"] }
+
+# Error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Arena allocation for fast AST
+bumpalo = "3.14"
+
+# String interning for identifiers
+string-interner = "0.17"
+
+# Fast hashmap
+rustc-hash = "1.1"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.dev]
+opt-level = 0
+debug = true

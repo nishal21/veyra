@@ -1,0 +1,78 @@
+// Veyra Language Feature Test
+// Testing core language functionality
+
+fn main() {
+    // Test 1: Basic println
+    println("=== Test 1: Basic println ===");
+    println("Hello from Veyra!");
+    
+    // Test 2: Integer variables and arithmetic
+    println("=== Test 2: Integers ===");
+    let a = 10;
+    let b = 20;
+    let sum = a + b;
+    println(sum);
+    
+    // Test 3: More arithmetic
+    println("=== Test 3: Arithmetic ===");
+    let x = 100;
+    let y = 25;
+    println(x + y);  // 125
+    println(x - y);  // 75
+    println(x * y);  // 2500
+    println(x / y);  // 4
+    
+    // Test 4: Function calls
+    println("=== Test 4: Functions ===");
+    let result = add(5, 7);
+    println(result);  // 12
+    
+    let doubled = double(21);
+    println(doubled);  // 42
+    
+    // Test 5: Nested function calls
+    println("=== Test 5: Nested calls ===");
+    let nested = add(double(3), double(4));
+    println(nested);  // 6 + 8 = 14
+    
+    // Test 6: Control flow - if/else
+    println("=== Test 6: Conditionals ===");
+    let num = 42;
+    if num > 40 {
+        println(1);  // Should print 1
+    } else {
+        println(0);
+    }
+    
+    // Test 7: Loops
+    println("=== Test 7: While loop ===");
+    let i = 0;
+    while i < 5 {
+        println(i);
+        i = i + 1;
+    }
+    
+    // Test 8: For loop
+    println("=== Test 8: For loop ===");
+    for j in 0..3 {
+        println(j);
+    }
+    
+    // Test 9: Comparison operators
+    println("=== Test 9: Comparisons ===");
+    if 10 == 10 { println(1); }
+    if 10 != 5 { println(1); }
+    if 10 > 5 { println(1); }
+    if 5 < 10 { println(1); }
+    
+    // Done
+    println("=== All tests complete! ===");
+}
+
+fn add(a: int, b: int) -> int {
+    return a + b;
+}
+
+fn double(n: int) -> int {
+    return n * 2;
+}
