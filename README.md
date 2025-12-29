@@ -249,4 +249,4 @@ If you find Veyra useful, please give it a star! ⭐
 
 ---
 
-**Made with ❤️ by the Veyra Team**
+**Made with ❤️ by the Nishal**
